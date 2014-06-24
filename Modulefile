@@ -1,0 +1,10 @@
+name 'fatmcgav-karaf'
+version '0.1.0'
+
+author 'Gavin Williams <fatmcgav@gmail.com>'
+license 'Apache License, version 2.0'
+source 'https://github.com/fatmcgav/fatmcgav-karaf.git'
+project_page 'https://github.com/fatmcgav/fatmcgav-karaf'
+summary 'Module to manage installation, configuration and management of Apache Karaf OSGi container'
+description 'TBC'
+dependency 'puppetlabs/stdlib', '>=3.2.0'

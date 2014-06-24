@@ -1,0 +1,4 @@
+---
+fixtures:
+  symlinks:
+    karaf: "#{source_dir}"

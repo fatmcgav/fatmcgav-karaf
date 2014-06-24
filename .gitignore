@@ -1,0 +1,11 @@
+/metadata.json
+/.librarian
+/.bundle
+/.tmp
+.*.sw?
+pkg
+spec/fixtures
+.rspec_system
+.vagrant
+/Gemfile.lock
+/Puppetfile.lock
