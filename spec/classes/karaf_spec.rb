@@ -21,7 +21,8 @@ describe 'karaf' do
       it { should contain_class('karaf::params') }
       it { should contain_anchor('karaf::begin') }
       it { should create_class('karaf::install').that_requires('Anchor[karaf::begin]')}
-        
+      it { should create_class('karaf::path').that_requires('Class[karaf::install]') }
+      
       it { should contain_anchor('karaf::end') }
         
       # karaf::install resources
@@ -51,7 +52,6 @@ describe 'karaf' do
       it { should contain_anchor('karaf::install::end') }
       
       # karaf::path resources
-      it { should create_class('karaf::path').that_requires('Class[karaf::install]') }
       it { should contain_file('/etc/profile.d/karaf.sh').with({ 
         'ensure'  => 'present',
         'owner'   => 'root',
