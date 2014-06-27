@@ -30,7 +30,7 @@ describe 'karaf' do
       it { should contain_user('karaf').with_ensure('present').with_gid('karaf').that_requires('Group[karaf]') }
       it { should contain_file('/tmp').that_requires('Anchor[karaf::install::begin]') }
       it { should contain_exec('download_apache-karaf-3.0.1.tar.gz').with( {
-        'command' => "wget -q http://www.apache.org/dyn/closer.cgi/karaf/3.0.1/apache-karaf-3.0.1.tar.gz -O /tmp/apache-karaf-3.0.1.tar.gz",
+        'command' => "wget -q http://mirror.catn.com/pub/apache/karaf/3.0.1/apache-karaf-3.0.1.tar.gz -O /tmp/apache-karaf-3.0.1.tar.gz",
         'creates' => '/tmp/apache-karaf-3.0.1.tar.gz',
         'timeout' => '300'
       } ).that_requires('File[/tmp]') }
@@ -49,6 +49,16 @@ describe 'karaf' do
         'creates' => '/opt/apache-karaf-3.0.1'
       }).that_requires('Exec[change-ownership]').that_comes_before('Anchor[karaf::install::end]') }
       it { should contain_anchor('karaf::install::end') }
-    end  
+      
+      # karaf::path resources
+      it { should create_class('karaf::path').that_requires('Class[karaf::install]') }
+      it { should contain_file('/etc/profile.d/karaf.sh').with({ 
+        'ensure'  => 'present',
+        'owner'   => 'root',
+        'group'   => 'root',
+        'mode'    => '0644',
+        'content' => /\/opt\/apache-karaf-3.0.1\/bin/
+      }) }
+    end
   end 
 end

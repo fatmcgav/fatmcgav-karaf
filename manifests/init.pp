@@ -20,6 +20,8 @@
 # Copyright 2014 Gavin Williams, unless otherwise noted.
 #
 class karaf (
+  $add_path       = $karaf::params::karaf_add_path,
+  #$create_service = $karaf::params::karaf_create_service,
   $download_file  = $karaf::params::karaf_download_file,
   $download_site  = $karaf::params::karaf_download_site,
   $group          = $karaf::params::karaf_group,
@@ -39,10 +41,20 @@ class karaf (
     $karaf_dir = "${parent_dir}/${install_dir}"
   }
 
+  # Need to manage path?
+  if $add_path {
+    class { 'karaf::path': require => Class['karaf::install'] }
+  }
+
+  # Create a service?
+  #if ($create_service) {
+  #  class { 'karaf::service': require => Class['karaf::install'] }
+  #}
+
   anchor { 'karaf::begin': } ->
   class { 'karaf::install': } ->
   # class { 'karaf::config': } ~>
   # class { 'karaf::service': } ->
   # Class['karaf']
-  anchor { 'karaf::end':}
+  anchor { 'karaf::end': }
 }
