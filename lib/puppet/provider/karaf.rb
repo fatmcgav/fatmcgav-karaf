@@ -8,8 +8,8 @@ class Puppet::Provider::Karaf < Puppet::Provider
     
     # Compile an array of command args
     args = Array.new
-    args << '-h' << @host if @host && !@host.nil?
-    args << '-a' << @port.to_s if @port && !@port.nil?
+    args << '-h' << @resource[:host] if @resource && !@resource[:host].empty?
+    args << '-a' << @resource[:port] if @resource && !@resource[:port].empty?
     args << '-u' << @resource[:karaf_user] if @resource && !@resource[:karaf_user].empty?
 
     # Need to add the passed_args to args array.
