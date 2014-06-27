@@ -1,0 +1,4 @@
+# File managed by Puppet
+if [ -d <%= scope.lookupvar('karaf::karaf_dir') %>/bin ]; then
+	PATH=$PATH:<%= scope.lookupvar('karaf::karaf_dir') %>/bin
+fi
