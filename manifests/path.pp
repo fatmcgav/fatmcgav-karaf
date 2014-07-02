@@ -5,8 +5,8 @@
 #
 class karaf::path {
   case $::osfamily {
-    'RedHat' : { $profile_template = template('karaf/karaf-profile-el.erb') }
-    'Debian' : { $profile_template = template('karaf/karaf-profile-deb.erb') }
+    'RedHat' : { $profile_template = template('karaf/profile.d/karaf-profile-el.erb') }
+    'Debian' : { $profile_template = template('karaf/profile.d/karaf-profile-deb.erb') }
     default  : { fail("OSFamily ${::osfamily} is not currently supported.") }
   }
 
