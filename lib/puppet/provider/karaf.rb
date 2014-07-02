@@ -1,7 +1,7 @@
 class Puppet::Provider::Karaf < Puppet::Provider
   
   Puppet.debug("Loaded Puppet::Provider::Karaf")
-  def self.karaf_exec(passed_args)
+  def karaf_exec(passed_args)
     Puppet.debug("Got to Puppet::Provider::Karaf::karaf_exec")
 
     #Puppet.debug("@resource.parameters == #{@resource.parameters.inspect}.")
