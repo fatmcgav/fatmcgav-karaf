@@ -4,9 +4,10 @@
 # It sets variables according to platform
 #
 class karaf::params {
+  # Need to manage Path? 
   case $::osfamily {
-    'RedHat' : { $karaf_add_path = true }
-    'Debian' : { $karaf_add_path = true }
+    'RedHat' : { $karaf_manage_path = true }
+    'Debian' : { $karaf_manage_path = true }
     default  : { fail("${::osfamily} not supported") }
   }
 
@@ -40,7 +41,9 @@ class karaf::params {
   $karaf_service_name     = undef
 
   # Should this module manage Java installation?
-  $karaf_manage_java      = true
+  $karaf_install_java     = true
+  # Should this module manage Java env setup?
+  $karaf_manage_java_home = true
   # JDK version: java-7-oracle, java-7-openjdk
   $karaf_java_ver         = 'java-7-openjdk'
   # Specify the JAVA_HOME value

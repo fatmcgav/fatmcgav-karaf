@@ -20,16 +20,17 @@
 # Copyright 2014 Gavin Williams, unless otherwise noted.
 #
 class karaf (
-  $add_path         = $karaf::params::karaf_add_path,
   $create_service   = $karaf::params::karaf_create_service,
   $download_file    = $karaf::params::karaf_download_file,
   $download_site    = $karaf::params::karaf_download_site,
   $group            = $karaf::params::karaf_group,
   $install_dir      = $karaf::params::karaf_install_dir,
+  $install_java     = $karaf::params::karaf_install_java,
   $install_method   = $karaf::params::karaf_install_method,
   $java_home        = $karaf::params::karaf_java_home,
   $java_ver         = $karaf::params::karaf_java_ver,
-  $manage_java      = $karaf::params::karaf_manage_java,
+  $manage_java_home = $karaf::params::karaf_manage_java_home,
+  $manage_path      = $karaf::params::karaf_manage_path,
   $manage_user      = $karaf::params::karaf_manage_user,
   $parent_dir       = $karaf::params::karaf_parent_dir,
   $start_on_install = $karaf::params::karaf_start_on_install,
@@ -37,6 +38,12 @@ class karaf (
   $user             = $karaf::params::karaf_user,
   $version          = $karaf::params::karaf_version) inherits karaf::params {
   # validate parameters here
+  validate_bool($create_service)
+  validate_bool($install_java)
+  validate_bool($manage_java_home)
+  validate_bool($manage_path)
+  validate_bool($manage_user)
+  validate_bool($start_on_install)
 
   # Installation location
   if ($install_dir == undef) {
@@ -46,21 +53,20 @@ class karaf (
   }
 
   # Need to manage path?
-  if $add_path {
+  if $manage_path {
     class { 'karaf::path': require => Class['karaf::install'] }
   }
 
   # Create a service?
-  if ($create_service) {
-    class { 'karaf::service': require => Class['karaf::path'] }
-  }
-
-  # Need to manage java?
-  if $manage_java {
-    class { 'karaf::java': before => Class['karaf::install'] }
+  if $create_service {
+    class { 'karaf::service':
+      require => Class['karaf::path'],
+      before  => Anchor['karaf::end']
+    }
   }
 
   anchor { 'karaf::begin': } ->
+  class { 'karaf::java': } ->
   class { 'karaf::install': } ->
   class { 'karaf::config': } ->
   # class { 'karaf::service': } ->

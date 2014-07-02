@@ -21,11 +21,6 @@ class karaf::java {
     }
   }
 
-  # Install the required package, if set.
-  if $java_package {
-    package { $java_package: ensure => 'installed' }
-  }
-
   # Handle JAVA_HOME
   if $karaf::java_home {
     $real_java_home = $karaf::java_home
@@ -33,25 +28,29 @@ class karaf::java {
     $real_java_home = $java_home
   }
 
-  notify { 'java_home':
-    message => "JAVA_HOME = ${real_java_home}.",
-    require => Package[$java_package]
+  # Install the required package, if set.
+  if $karaf::install_java and $java_package {
+    package { $java_package: ensure => 'installed' }
   }
 
-  case $::osfamily {
-    'RedHat' : { $java_profile_template = template('karaf/profile.d/java-profile-el.erb') }
-    'Debian' : { $java_profile_template = template('karaf/profile.d/java-profile-deb.erb') }
-    default  : { fail("OSFamily ${::osfamily} is not currently supported.") }
-  }
+  # Setup env if appropriate
+  if $karaf::manage_java_home {
+    case $::osfamily {
+      'RedHat' : { $java_profile_template = template('karaf/profile.d/java-profile-el.erb') }
+      'Debian' : { $java_profile_template = template('karaf/profile.d/java-profile-deb.erb') }
+      default  : { fail("OSFamily ${::osfamily} is not currently supported.") }
+    }
 
-  # Add a file to the profile.d directory
-  file { '/etc/profile.d/java.sh':
-    ensure  => present,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => $java_profile_template,
-    require => Package[$java_package]
+    # Add a file to the profile.d directory
+    file { '/etc/profile.d/java.sh':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => $java_profile_template,
+      require => Package[$java_package]
+    }
+
   }
 
 }

@@ -8,6 +8,7 @@ class karaf::config {
     owner   => $karaf::user,
     group   => $karaf::group,
     content => template('karaf/etc/karaf-wrapper.conf.erb'),
+    require => Exec['install-service'],
     notify  => Service['karaf-service']
   }
 
