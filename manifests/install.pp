@@ -98,6 +98,20 @@ class karaf::install {
         require => Exec['change-ownership'],
         before  => Anchor['karaf::install::end']
       }
+
+      # Start karaf on installation?
+      if $karaf::start_on_install {
+        notify { 'karaf-install': message => "Starting karaf in ${karaf::karaf_dir} on install." }
+
+        exec { "start-karaf-${karaf::version}":
+          command => "sh -c \"${karaf::karaf_dir}/bin/start; sleep 20\"", # Nasty hack to allow Karaf to startup, currently no blocking method avail.
+          #user    => $karaf::user,
+          cwd     => $karaf::karaf_dir,
+          unless  => ['ps -ef |grep org.apache.karaf|grep -v grep', 'service karaf-service status'],
+          require => Exec["move-karaf-${karaf::version}"],
+          before  => Anchor['karaf::install::end']
+        }
+      }
     }
     default   : {
       fail("Unrecognised Installation method ${karaf::install_method}. Choose one of: 'package','zip'.")
