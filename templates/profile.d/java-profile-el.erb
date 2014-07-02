@@ -1,0 +1,5 @@
+# File managed by Puppet
+if [ -d <%= scope.lookupvar('karaf::java::real_java_home') %> ]; then
+  export JAVA_HOME=<%= scope.lookupvar('karaf::java::real_java_home') %>
+  pathmunge $JAVA_HOME/bin
+fi
