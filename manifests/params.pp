@@ -4,7 +4,7 @@
 # It sets variables according to platform
 #
 class karaf::params {
-  # Need to manage Path? 
+  # Need to manage Path?
   case $::osfamily {
     'RedHat' : { $karaf_manage_path = true }
     'Debian' : { $karaf_manage_path = true }
