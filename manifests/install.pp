@@ -102,7 +102,7 @@ class karaf::install {
       # Start karaf on installation?
       if $karaf::start_on_install {
         exec { "start-karaf-${karaf::version}":
-          command => "sh -c \"${karaf::karaf_dir}/bin/start; sleep 60\"", # Nasty hack to allow Karaf to startup, currently no blocking method avail.
+          command => "sh -c \"${karaf::karaf_dir}/bin/start\"",
           #user    => $karaf::user,
           cwd     => $karaf::karaf_dir,
           unless  => ['ps -ef |grep org.apache.karaf|grep -v grep', 'service karaf-service status'],

@@ -7,7 +7,7 @@ class karaf::service {
   karaf_feature { 'wrapper': ensure => 'present' }
 
   exec { 'install-service':
-    command => 'client wrapper:install',
+    command => 'client -r 30 wrapper:install',
     user    => $karaf::user,
     path    => "${karaf::karaf_dir}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
     unless  => "test -f ${karaf::karaf_dir}/bin/karaf-service",

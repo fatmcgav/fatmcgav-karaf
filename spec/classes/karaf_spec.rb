@@ -66,7 +66,7 @@ describe 'karaf' do
           'creates' => '/opt/apache-karaf-3.0.1'
         }).that_requires('Exec[change-ownership]').that_comes_before('Anchor[karaf::install::end]') }
       it { should contain_exec('start-karaf-3.0.1').with({
-          'command' => 'sh -c "/opt/apache-karaf-3.0.1/bin/start; sleep 60"',
+          'command' => 'sh -c "/opt/apache-karaf-3.0.1/bin/start"',
           'cwd'     => '/opt/apache-karaf-3.0.1',
           'unless'  => ['ps -ef |grep org.apache.karaf|grep -v grep', 'service karaf-service status']
         }).that_requires('Exec[move-karaf-3.0.1]').that_comes_before('Anchor[karaf::install::end]') }
@@ -91,7 +91,7 @@ describe 'karaf' do
       # karaf::service resource
       it { should contain_karaf_feature('wrapper').with_ensure('present') }
       it { should contain_exec('install-service').with({
-        'command' => 'client wrapper:install',
+        'command' => 'client -r 30 wrapper:install',
         'user'    => 'karaf',
         'path'    => '/opt/apache-karaf-3.0.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         'unless'  => 'test -f /opt/apache-karaf-3.0.1/bin/karaf-service'
