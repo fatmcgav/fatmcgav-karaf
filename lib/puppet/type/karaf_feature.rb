@@ -6,14 +6,16 @@ Puppet::Type.newtype(:karaf_feature) do
   newparam(:name) do
     desc "Karaf feature name"
     isnamevar
+    
+    validate do |value|
+      unless value =~ /^[\w-]+$/
+         raise ArgumentError, "%s is not a valid feature name." % value
+      end
+    end
   end
   
   newparam(:version) do
     desc "Karaf feature vesion"
-  end
-  
-  newparam(:repository) do
-    desc "Karaf repository to install feature from"
   end
   
   #
@@ -56,9 +58,11 @@ Puppet::Type.newtype(:karaf_feature) do
   
   newparam(:user) do
     desc "Linux user to run command as"
-    defaultto 'karaf'
 
     validate do |value|
+      unless Puppet.features.root?
+        self.fail "Only root can execute commands as other users"
+      end
       unless value =~ /^[\w-]+$/
          raise ArgumentError, "%s is not a valid user name." % value
       end
