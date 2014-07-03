@@ -1,21 +1,21 @@
-Puppet::Type.newtype(:karaf_feature) do
-  @doc = "Manage Karaf features"
+Puppet::Type.newtype(:karaf_feature_repo) do
+  @doc = "Manage Karaf feature repositories"
   
   ensurable
   
   newparam(:name) do
-    desc "Karaf feature name"
+    desc "Karaf feature repository name/URL"
     isnamevar
     
     validate do |value|
       unless value =~ /^[\w-]+$/
-         raise ArgumentError, "%s is not a valid feature name." % value
+         raise ArgumentError, "%s is not a valid feature repository name." % value
       end
     end
   end
   
   newparam(:version) do
-    desc "Karaf feature vesion"
+    desc "Karaf feature repository vesion"
   end
   
   #
