@@ -10,7 +10,7 @@ class Puppet::Provider::Karaf < Puppet::Provider
     args = Array.new
     args << '-h' << @resource[:host] if @resource[:host] && !@resource[:host].nil?
     args << '-a' << @resource[:port] if @resource[:port] && !@resource[:port].nil?
-    args << '-u' << @resource[:karaf_user] if @resource && !@resource[:karaf_user].empty?
+    args << '-u' << @resource[:karaf_user] if @resource[:karaf_user] && !@resource[:karaf_user].nil?
 
     # Need to add the passed_args to args array.
     passed_args.each { |arg| args << arg }
@@ -21,7 +21,7 @@ class Puppet::Provider::Karaf < Puppet::Provider
     Puppet.debug("client command = #{command}")
 
     # Compile the actual command as the specified user.
-    command = "su - #{@resource[:user]} -c \"#{command}\"" if @resource && !@resource[:user].empty?
+    command = "su - #{@resource[:user]} -c \"#{command}\"" if @resource[:karaf_user] && !@resource[:user].nil?
     # Debug output of command if required.
     Puppet.debug("exec command = #{command}")
 
