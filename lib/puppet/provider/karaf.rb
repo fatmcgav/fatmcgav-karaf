@@ -11,6 +11,7 @@ class Puppet::Provider::Karaf < Puppet::Provider
     args << '-h' << @resource[:host] if @resource[:host] && !@resource[:host].nil?
     args << '-a' << @resource[:port] if @resource[:port] && !@resource[:port].nil?
     args << '-u' << @resource[:karaf_user] if @resource[:karaf_user] && !@resource[:karaf_user].nil?
+    args << '-r' << @resource[:retries] unless !@resource.parameters.include?(:retries) && @resource[:retries].nil?
 
     # Need to add the passed_args to args array.
     passed_args.each { |arg| args << arg }

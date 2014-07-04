@@ -15,7 +15,7 @@ describe Puppet::Type.type(:karaf_feature) do
   end
   
   describe "when validating attributes" do
-    [:name, :version, :host, :port, :karaf_user, :user].each do |param|
+    [:name, :version, :host, :port, :karaf_user, :user, :retries].each do |param|
       it "should have a #{param} parameter" do
         described_class.attrtype(param).should == :param
       end
@@ -147,7 +147,21 @@ describe Puppet::Type.type(:karaf_feature) do
         Puppet.features.expects(:root?).returns(false).once
         expect { described_class.new(:name => 'feature', :user => 'karaf') }.to raise_error(Puppet::Error, /Only root can execute commands as other users/)
       end
-    end 
+    end
+    
+    describe "for port" do
+      it "should support a numerical value" do
+        described_class.new(:name => 'feature', :retries => '2', :ensure => :present)[:retries].should == 2
+      end
+
+      it "should have a default value of 5" do
+        described_class.new(:name => 'feature', :ensure => :present)[:retries].should == 5
+      end
+
+      it "should not supretries a non-numeric value" do
+        expect { described_class.new(:name => 'feature', :retries => 'a', :ensure => :present) }.to raise_error(Puppet::Error, /a is not a valid retries value./)
+      end
+    end
   end
   
 end

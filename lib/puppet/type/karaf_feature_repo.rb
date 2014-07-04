@@ -69,4 +69,24 @@ Puppet::Type.newtype(:karaf_feature_repo) do
     end
   end
   
+  newparam(:retries) do
+    desc "Number of times to retry command"
+    defaultto '5'
+    
+    validate do |value|
+      raise ArgumentError, "%s is not a valid retries value." % value unless value =~ /^\d+$/
+    end
+
+    munge do |value|
+      case value
+      when String
+        if value =~ /^[-0-9]+$/
+          value = Integer(value)
+        end
+      end
+
+      return value
+    end
+  end
+  
 end
