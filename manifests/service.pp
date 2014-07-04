@@ -4,10 +4,13 @@
 # It creates and configures a karaf servicefile
 #
 class karaf::service {
-  karaf_feature { 'wrapper': ensure => 'present' }
+  karaf_feature { 'wrapper':
+    ensure  => 'present',
+    user    => $karaf::user
+  }
 
   exec { 'install-service':
-    command => 'client -r 30 wrapper:install',
+    command => 'client wrapper:install',
     user    => $karaf::user,
     path    => "${karaf::karaf_dir}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
     unless  => "test -f ${karaf::karaf_dir}/bin/karaf-service",

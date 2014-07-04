@@ -89,9 +89,9 @@ describe 'karaf' do
         that_requires('Exec[install-service]').that_notifies('Service[karaf-service]') }
                 
       # karaf::service resource
-      it { should contain_karaf_feature('wrapper').with_ensure('present') }
+      it { should contain_karaf_feature('wrapper').with_ensure('present').with_user('karaf') }
       it { should contain_exec('install-service').with({
-        'command' => 'client -r 30 wrapper:install',
+        'command' => 'client wrapper:install',
         'user'    => 'karaf',
         'path'    => '/opt/apache-karaf-3.0.1/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         'unless'  => 'test -f /opt/apache-karaf-3.0.1/bin/karaf-service'
