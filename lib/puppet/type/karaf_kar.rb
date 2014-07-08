@@ -7,12 +7,11 @@ Puppet::Type.newtype(:karaf_kar) do
     desc "Karaf kar name"
     isnamevar
     
-    # Can be a 'file:x' or 'mvn:x'
-    #validate do |value|
-    #  unless value =~ /^[\w-]+$/
-    #     raise ArgumentError, "%s is not a valid kar file or location." % value
-    #  end
-    #end
+    validate do |value|
+      unless value =~ /^[\w-]+$/
+         raise ArgumentError, "%s is not a valid kar name." % value
+      end
+    end
   end
   
   newparam(:location) do
