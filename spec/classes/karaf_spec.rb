@@ -28,7 +28,7 @@ describe 'karaf' do
         that_requires('Class[karaf::install]').that_comes_before('Anchor[karaf::end]') }
       it { should create_class('karaf::path').that_requires('Class[karaf::install]') }
       it { should create_class('karaf::service').
-        that_requires('Class[karaf::path]').that_comes_before('Anchor[karaf::end]') }
+        that_requires('Class[karaf::path]') }
       it { should contain_anchor('karaf::end') }
 
       # karaf::java resources
