@@ -60,8 +60,7 @@ class karaf (
   # Create a service?
   if $create_service {
     class { 'karaf::service':
-      require => Class['karaf::path'],
-      before  => Anchor['karaf::end']
+      require => Class['karaf::path']
     }
   }
 
