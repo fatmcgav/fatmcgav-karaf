@@ -8,7 +8,7 @@ Puppet::Type.newtype(:karaf_kar) do
     isnamevar
     
     validate do |value|
-      unless value =~ /^[\w-]+$/
+      unless value =~ /^[\w\-.]+$/
          raise ArgumentError, "%s is not a valid kar name." % value
       end
     end
@@ -79,6 +79,26 @@ Puppet::Type.newtype(:karaf_kar) do
     
     validate do |value|
       raise ArgumentError, "%s is not a valid retries value." % value unless value =~ /^\d+$/
+    end
+
+    munge do |value|
+      case value
+      when String
+        if value =~ /^[-0-9]+$/
+          value = Integer(value)
+        end
+      end
+
+      return value
+    end
+  end
+  
+  newparam(:delay) do
+    desc "Retry delay seconds"
+    defaultto '5'
+    
+    validate do |value|
+      raise ArgumentError, "%s is not a valid retry delay value." % value unless value =~ /^\d+$/
     end
 
     munge do |value|

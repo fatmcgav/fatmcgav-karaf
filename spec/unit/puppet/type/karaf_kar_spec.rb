@@ -15,7 +15,7 @@ describe Puppet::Type.type(:karaf_kar) do
   end
   
   describe "when validating attributes" do
-    [:name, :location, :host, :port, :karaf_user, :user, :retries].each do |param|
+    [:name, :location, :host, :port, :karaf_user, :user, :retries, :delay].each do |param|
       it "should have a #{param} parameter" do
         described_class.attrtype(param).should == :param
       end
@@ -34,6 +34,10 @@ describe Puppet::Type.type(:karaf_kar) do
    
       it "should support hyphens" do
         described_class.new(:name => 'kar-name', :ensure => :present)[:name].should == 'kar-name'
+      end
+      
+      it "should support periods" do
+        described_class.new(:name => 'kar.name', :ensure => :present)[:name].should == 'kar.name'
       end
 
       it "should not support spaces" do
@@ -149,7 +153,7 @@ describe Puppet::Type.type(:karaf_kar) do
       end
     end
     
-    describe "for port" do
+    describe "for retries" do
       it "should support a numerical value" do
         described_class.new(:name => 'kar', :retries => '2', :ensure => :present)[:retries].should == 2
       end
@@ -158,8 +162,22 @@ describe Puppet::Type.type(:karaf_kar) do
         described_class.new(:name => 'kar', :ensure => :present)[:retries].should == 5
       end
 
-      it "should not supretries a non-numeric value" do
+      it "should not support a non-numeric value" do
         expect { described_class.new(:name => 'kar', :retries => 'a', :ensure => :present) }.to raise_error(Puppet::Error, /a is not a valid retries value./)
+      end
+    end
+    
+    describe "for delay" do
+      it "should support a numerical value" do
+        described_class.new(:name => 'kar', :delay => '2', :ensure => :present)[:delay].should == 2
+      end
+
+      it "should have a default value of 5" do
+        described_class.new(:name => 'kar', :ensure => :present)[:delay].should == 5
+      end
+
+      it "should not support a non-numeric value" do
+        expect { described_class.new(:name => 'kar', :delay => 'a', :ensure => :present) }.to raise_error(Puppet::Error, /a is not a valid retry delay value./)
       end
     end
   end
