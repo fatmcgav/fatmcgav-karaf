@@ -19,6 +19,12 @@ describe Puppet::Type.type(:karaf_kar) do
       it "should have a #{param} parameter" do
         described_class.attrtype(param).should == :param
       end
+    end 
+    
+    [:ensure].each do |property|
+      it "should have a #{property} property" do
+        described_class.attrtype(property).should == :property
+      end
     end
   end
   
