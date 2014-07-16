@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Puppet::Type.type(:karaf_kar) do
+describe Puppet::Type.type(:karaf_config) do
 
   before :each do
     described_class.stubs(:defaultprovider).returns providerclass
   end
 
   let :providerclass do
-    described_class.provide(:fake_karaf_kar_provider) { mk_resource_methods }
+    described_class.provide(:fake_karaf_config_provider) { mk_resource_methods }
   end
 
   it "should have :name as it's namevar" do
@@ -15,13 +15,13 @@ describe Puppet::Type.type(:karaf_kar) do
   end
   
   describe "when validating attributes" do
-    [:name, :location, :host, :port, :karaf_user, :user, :retries, :delay].each do |param|
+    [:name, :pid, :host, :port, :karaf_user, :user, :retries, :delay].each do |param|
       it "should have a #{param} parameter" do
         described_class.attrtype(param).should == :param
       end
-    end 
+    end
     
-    [:ensure].each do |property|
+    [:ensure, :value].each do |property|
       it "should have a #{property} property" do
         described_class.attrtype(property).should == :property
       end
@@ -31,47 +31,57 @@ describe Puppet::Type.type(:karaf_kar) do
   describe "when validating values" do
     describe "for name" do
       it "should support an alphanumerical name" do
-        described_class.new(:name => 'kar', :ensure => :present)[:name].should == 'kar'
+        described_class.new(:name => 'config', :ensure => :present)[:name].should == 'config'
       end
 
       it "should support underscores" do
-        described_class.new(:name => 'kar_name', :ensure => :present)[:name].should == 'kar_name'
+        described_class.new(:name => 'config_name', :ensure => :present)[:name].should == 'config_name'
       end
    
       it "should support hyphens" do
-        described_class.new(:name => 'kar-name', :ensure => :present)[:name].should == 'kar-name'
+        described_class.new(:name => 'config-name', :ensure => :present)[:name].should == 'config-name'
       end
       
       it "should support periods" do
-        described_class.new(:name => 'kar.name', :ensure => :present)[:name].should == 'kar.name'
+        described_class.new(:name => 'config.name', :ensure => :present)[:name].should == 'config.name'
       end
 
       it "should not support spaces" do
-        expect { described_class.new(:name => 'kar name', :ensure => :present) }.to raise_error(Puppet::Error, /kar name is not a valid kar name/)
+        expect { described_class.new(:name => 'config name', :ensure => :present) }.to raise_error(Puppet::Error, /config name is not a valid config property name/)
       end
     end
 
     describe "for ensure" do
       it "should support present" do
-        described_class.new(:name => 'kar', :ensure => 'present')[:ensure].should == :present
+        described_class.new(:name => 'config', :ensure => 'present')[:ensure].should == :present
       end
 
       it "should support absent" do
-        described_class.new(:name => 'kar', :ensure => 'absent')[:ensure].should == :absent
+        described_class.new(:name => 'config', :ensure => 'absent')[:ensure].should == :absent
       end
 
       it "should not support other values" do
-        expect { described_class.new(:name => 'kar', :ensure => 'foo') }.to raise_error(Puppet::Error, /Invalid value "foo"/)
+        expect { described_class.new(:name => 'config', :ensure => 'foo') }.to raise_error(Puppet::Error, /Invalid value "foo"/)
       end
 
       it "should not have a default value" do
-        described_class.new(:name => 'kar')[:ensure].should == nil
+        described_class.new(:name => 'config')[:ensure].should == nil
       end
     end
     
     describe "for location" do
+      it "should support an dotted name" do
+        described_class.new(:name => 'config', :pid => 'org.apache.karaf.shell', :ensure => :present)[:pid].should == 'org.apache.karaf.shell'
+      end
+
+      it "should not support spaces" do
+        expect { described_class.new(:name => 'config', :pid => 'org.apache.karaf shell', :ensure => :present) }.to raise_error(Puppet::Error, /org.apache.karaf shell is not a valid service pid/)
+      end
+    end
+    
+    describe "for value" do
       it "should support a value" do
-        described_class.new(:name => 'kar', :location => 'file:/tmp/test.kar', :ensure => :present)[:location].should == 'file:/tmp/test.kar'
+        described_class.new(:name => 'config', :value => 'value', :ensure => :present)[:value].should == 'value'
       end
     end
     

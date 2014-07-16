@@ -18,17 +18,17 @@ class Puppet::Provider::Karaf < Puppet::Provider
     passed_args.each { |arg| args << arg }
 
     # Transform args array into a exec args string.
-    exec_args = args.join " "
+    exec_args = args.join(" ").gsub("\"", "\\\"")
     command = "client #{exec_args}"
     Puppet.debug("client command = #{command}")
 
     # Compile the actual command as the specified user.
-    command = "su - #{@resource[:user]} -c \"#{command}\"" if @resource[:karaf_user] && !@resource[:user].nil?
+    command = "su - #{@resource[:user]} -c \"#{command}\"" if @resource[:user] && !@resource[:user].nil?
     # Debug output of command if required.
     Puppet.debug("exec command = #{command}")
 
     # Execute the command.
-    output = `#{command}`
+    output = `#{command} 2>&1`
     # Check return code and fail if required
     self.fail output unless $? == 0
 
