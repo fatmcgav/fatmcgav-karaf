@@ -1,7 +1,7 @@
 # == Class karaf::config
 #
 # This class is meant to be called from karaf
-# It configures java
+# It configures the karaf-wrapper config file
 #
 class karaf::config {
   file { "${karaf::karaf_dir}/etc/karaf-wrapper.conf":
