@@ -6,7 +6,9 @@
 class karaf::service {
   karaf_feature { 'wrapper':
     ensure  => 'present',
-    user    => $karaf::user
+    user    => $karaf::user,
+    retries => '10',
+    delay   => '10'
   }
 
   exec { 'install-service':

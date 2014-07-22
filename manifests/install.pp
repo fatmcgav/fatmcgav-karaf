@@ -105,7 +105,7 @@ class karaf::install {
           command => "sh -c \"${karaf::karaf_dir}/bin/start\"",
           #user    => $karaf::user,
           cwd     => $karaf::karaf_dir,
-          unless  => ['ps -ef |grep org.apache.karaf|grep -v grep', 'service karaf-service status'],
+          unless  => 'ps -ef |grep org.apache.karaf|grep -v grep',
           require => Exec["move-karaf-${karaf::version}"],
           before  => Anchor['karaf::install::end']
         }

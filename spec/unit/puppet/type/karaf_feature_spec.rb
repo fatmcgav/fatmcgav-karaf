@@ -15,7 +15,7 @@ describe Puppet::Type.type(:karaf_feature) do
   end
   
   describe "when validating attributes" do
-    [:name, :version, :host, :port, :karaf_user, :user, :retries].each do |param|
+    [:name, :version, :host, :port, :karaf_user, :user, :retries, :delay].each do |param|
       it "should have a #{param} parameter" do
         described_class.attrtype(param).should == :param
       end
@@ -155,7 +155,7 @@ describe Puppet::Type.type(:karaf_feature) do
       end
     end
     
-    describe "for port" do
+    describe "for retries" do
       it "should support a numerical value" do
         described_class.new(:name => 'feature', :retries => '2', :ensure => :present)[:retries].should == 2
       end
@@ -166,6 +166,20 @@ describe Puppet::Type.type(:karaf_feature) do
 
       it "should not supretries a non-numeric value" do
         expect { described_class.new(:name => 'feature', :retries => 'a', :ensure => :present) }.to raise_error(Puppet::Error, /a is not a valid retries value./)
+      end
+    end
+    
+    describe "for delay" do
+      it "should support a numerical value" do
+        described_class.new(:name => 'feature', :delay => '2', :ensure => :present)[:delay].should == 2
+      end
+
+      it "should have a default value of 5" do
+        described_class.new(:name => 'feature', :ensure => :present)[:delay].should == 5
+      end
+
+      it "should not supdelay a non-numeric value" do
+        expect { described_class.new(:name => 'feature', :delay => 'a', :ensure => :present) }.to raise_error(Puppet::Error, /a is not a valid retry delay value./)
       end
     end
   end

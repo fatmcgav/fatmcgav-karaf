@@ -68,7 +68,7 @@ describe 'karaf' do
       it { should contain_exec('start-karaf-3.0.1').with({
           'command' => 'sh -c "/opt/apache-karaf-3.0.1/bin/start"',
           'cwd'     => '/opt/apache-karaf-3.0.1',
-          'unless'  => ['ps -ef |grep org.apache.karaf|grep -v grep', 'service karaf-service status']
+          'unless'  => 'ps -ef |grep org.apache.karaf|grep -v grep'
         }).that_requires('Exec[move-karaf-3.0.1]').that_comes_before('Anchor[karaf::install::end]') }
       it { should contain_anchor('karaf::install::end') }
 
@@ -89,7 +89,7 @@ describe 'karaf' do
         that_requires('Exec[install-service]').that_notifies('Service[karaf-service]') }
                 
       # karaf::service resource
-      it { should contain_karaf_feature('wrapper').with_ensure('present').with_user('karaf') }
+      it { should contain_karaf_feature('wrapper').with_ensure('present').with_user('karaf').with_retries('10').with_delay('10') }
       it { should contain_exec('install-service').with({
         'command' => 'client wrapper:install',
         'user'    => 'karaf',
